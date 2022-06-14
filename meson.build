@@ -14,3 +14,8 @@ executable('tests',
 executable('gen',
            'gen.cpp',
            install : false)
+
+executable('bench',
+           'bench.cpp',
+           dependencies : [ dependency('benchmark') ],
+           install : false)
