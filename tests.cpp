@@ -52,20 +52,23 @@ TEST_CASE("base64") {
     from_base64_inplace(s);
     CHECK(s == in);
 
+    char buf[10];
+    CHECK(from_base64(out.data(), out.size(), buf, sizeof(buf)) != -1);
+
     // Invalid input can result in
     // invalid output, but never UB
-    CHECK(from_base64("!@#$") .size() + 1);
-    CHECK(from_base64("!====").size() + 1);
-    CHECK(from_base64("=AAA") .size() + 1);
-    CHECK(from_base64("AA=A") .size() + 1);
-    CHECK(from_base64("A==A") .size() + 1);
-    CHECK(from_base64("=A==") .size() + 1);
-    CHECK(from_base64("=A===").size() + 1);
-    CHECK(from_base64("=")    .size() + 1);
-    CHECK(from_base64("==")   .size() + 1);
-    CHECK(from_base64("===")  .size() + 1);
-    CHECK(from_base64("====") .size() + 1);
-    CHECK(from_base64("A===") .size() + 1);
-    CHECK(from_base64("!===") .size() + 1);
-    CHECK(from_base64("====!").size() + 1);
+    CHECK(from_base64("!@#$") .size() != -1);
+    CHECK(from_base64("!====").size() != -1);
+    CHECK(from_base64("=AAA") .size() != -1);
+    CHECK(from_base64("AA=A") .size() != -1);
+    CHECK(from_base64("A==A") .size() != -1);
+    CHECK(from_base64("=A==") .size() != -1);
+    CHECK(from_base64("=A===").size() != -1);
+    CHECK(from_base64("=")    .size() != -1);
+    CHECK(from_base64("==")   .size() != -1);
+    CHECK(from_base64("===")  .size() != -1);
+    CHECK(from_base64("====") .size() != -1);
+    CHECK(from_base64("A===") .size() != -1);
+    CHECK(from_base64("!===") .size() != -1);
+    CHECK(from_base64("====!").size() != -1);
 }
