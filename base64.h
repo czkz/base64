@@ -85,23 +85,24 @@ static constexpr uint8_t base64_lut[256][7] = {
     const ssize_t origLen = s.size();
     const ssize_t newLen = (origLen / 3 + (origLen%3!=0)) * 4;
     ret.resize(newLen, '=');
+    char* out = ret.data();
 
     ssize_t i; // Signed because (origLen - 2) can underflow
     for (i = 0; i < origLen - 2; i += 3) {
-        ret[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
-        ret[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
-        ret[i / 3 * 4 + 2] = a[ (s[i+1] & 0b00001111) << 2 | (s[i+2] & 0b11000000) >> 6 ];
-        ret[i / 3 * 4 + 3] = a[ (s[i+2] & 0b00111111) ];
+        out[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
+        out[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
+        out[i / 3 * 4 + 2] = a[ (s[i+1] & 0b00001111) << 2 | (s[i+2] & 0b11000000) >> 6 ];
+        out[i / 3 * 4 + 3] = a[ (s[i+2] & 0b00111111) ];
     }
     switch (origLen % 3) {
     case 2:
-        ret[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
-        ret[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
-        ret[i / 3 * 4 + 2] = a[ (s[i+1] & 0b00001111) << 2 | (s[i+2] & 0b11000000) >> 6 ];
+        out[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
+        out[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
+        out[i / 3 * 4 + 2] = a[ (s[i+1] & 0b00001111) << 2 | (s[i+2] & 0b11000000) >> 6 ];
         break;
     case 1:
-        ret[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
-        ret[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
+        out[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
+        out[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
         break;
     }
     return ret;
