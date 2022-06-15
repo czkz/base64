@@ -76,27 +76,26 @@ static constexpr uint8_t base64_lut[256][6] = {
     std::string ret;
     const ssize_t origLen = s.size();
     const ssize_t newLen = (origLen / 3 + (origLen%3!=0)) * 4;
-    ret.reserve(newLen);
+    ret.resize(newLen, '=');
 
     ssize_t i; // Signed because (origLen - 2) can underflow
     for (i = 0; i < origLen - 2; i += 3) {
-        ret += a[ (s[i] & 0b11111100) >> 2 ];
-        ret += a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
-        ret += a[ (s[i+1] & 0b00001111) << 2 | (s[i+2] & 0b11000000) >> 6 ];
-        ret += a[ (s[i+2] & 0b00111111) ];
+        ret[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
+        ret[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
+        ret[i / 3 * 4 + 2] = a[ (s[i+1] & 0b00001111) << 2 | (s[i+2] & 0b11000000) >> 6 ];
+        ret[i / 3 * 4 + 3] = a[ (s[i+2] & 0b00111111) ];
     }
     switch (origLen % 3) {
     case 2:
-        ret += a[ (s[i] & 0b11111100) >> 2 ];
-        ret += a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
-        ret += a[ (s[i+1] & 0b00001111) << 2 | (s[i+2] & 0b11000000) >> 6 ];
+        ret[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
+        ret[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
+        ret[i / 3 * 4 + 2] = a[ (s[i+1] & 0b00001111) << 2 | (s[i+2] & 0b11000000) >> 6 ];
         break;
     case 1:
-        ret += a[ (s[i] & 0b11111100) >> 2 ];
-        ret += a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
+        ret[i / 3 * 4 + 0] = a[ (s[i] & 0b11111100) >> 2 ];
+        ret[i / 3 * 4 + 1] = a[ (s[i+0] & 0b00000011) << 4 | (s[i+1] & 0b11110000) >> 4 ];
         break;
     }
-    ret.resize(newLen, '=');
     return ret;
 }
 
@@ -122,13 +121,13 @@ inline size_t from_base64(const void* src, size_t srcLen, void* dst, size_t dstL
         return 0;
     }
 
-    size_t outLen = 0;
+    size_t outLen = newLen;
     uint8_t* out = reinterpret_cast<uint8_t*>(dst);
 
     for (size_t i = 0; i < origLen; i += 4) {
-        out[outLen++] = base64_lut[data[i+0]][0] | base64_lut[data[i+1]][1];
-        out[outLen++] = base64_lut[data[i+1]][2] | base64_lut[data[i+2]][3];
-        out[outLen++] = base64_lut[data[i+2]][4] | base64_lut[data[i+3]][5];
+        out[i / 4 * 3 + 0] = base64_lut[data[i+0]][0] | base64_lut[data[i+1]][1];
+        out[i / 4 * 3 + 1] = base64_lut[data[i+1]][2] | base64_lut[data[i+2]][3];
+        out[i / 4 * 3 + 2] = base64_lut[data[i+2]][4] | base64_lut[data[i+3]][5];
     }
     // Min possible data.size() is 4, so rbegin() + 3 <= rend()
     // Min outLen is 3, so outLen-- will never underflow
