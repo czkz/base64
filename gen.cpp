@@ -5,27 +5,6 @@
 #include <iostream>
 
 // Could be consteval in c++20
-static void lut_to() {
-    constexpr std::string_view a = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    static_assert(a.size() == 64);
-
-    std::array<std::array<uint8_t, 4>, 256> t;
-    for (int i = 0; i < 256; i++) {
-        t[i][0] = a[i >> 2];
-        t[i][1] = a[(i & 0b00000011) << 4 | (i & 0b11110000) >> 4];
-        t[i][2] = a[(i & 0b00001111) << 2 | (i & 0b11000000) >> 6];
-        t[i][3] = a[i & 0b00111111];
-    }
-    for (auto e : t) {
-        std::cout << "\"";
-        for (auto c : e) {
-            std::cout << c;
-        }
-        std::cout << "\",\n";
-    }
-}
-
-// Could be consteval in c++20
 static void lut_from() {
     constexpr std::string_view a = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     static_assert(a.size() == 64);
@@ -71,5 +50,4 @@ static void lut_from() {
 
 int main() {
     lut_from();
-    lut_to();
 }
