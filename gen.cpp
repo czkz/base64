@@ -40,11 +40,11 @@ static void lut_from() {
         }
     }
     for (auto e : t) {
-        std::cout << "{ ";
+        std::cout << "\"";
         for (auto v : e) {
-            std::cout << "0x" << std::hex << (int) v << ", ";
+            std::cout << "\\x" << std::hex << (int) v << "";
         }
-        std::cout << "},\n";
+        std::cout << "\",\n";
     }
 }
 
