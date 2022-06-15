@@ -48,9 +48,17 @@ TEST_CASE("base64") {
     // base64url
     CHECK(from_base64("PDw_IT8-Pg==") == "<<?!?>>");
 
-    std::string s {out};
-    from_base64_inplace(s);
-    CHECK(s == in);
+    {
+        std::string s {out};
+        from_base64_inplace(s);
+        CHECK(s == in);
+    }
+    {
+        std::string s {out};
+        const auto len = from_base64_inplace(s.data(), s.size());
+        s.resize(len);
+        CHECK(s == in);
+    }
 
     char buf[10];
     CHECK(from_base64(out.data(), out.size(), buf, sizeof(buf)) != -1);
