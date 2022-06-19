@@ -1,4 +1,5 @@
 #include "base64.h"
+#include <algorithm>
 #include <iostream>
 #include <string_view>
 #include <vector>
@@ -7,10 +8,8 @@
 
 static void BM_to_base64(benchmark::State& state) {
     std::vector<char> v;
-    v.reserve(16*1024*1024);
-    for (auto& e : v) {
-        e = rand();
-    }
+    v.resize(16*1024*1024);
+    std::generate(v.begin(), v.end(), rand);
 
     for (auto _ : state) {
         const std::string s = to_base64(std::string_view{ v.data(), v.size() });
@@ -20,10 +19,8 @@ static void BM_to_base64(benchmark::State& state) {
 
 static void BM_from_base64(benchmark::State& state) {
     std::vector<char> v;
-    v.reserve(16*1024*1024);
-    for (auto& e : v) {
-        e = rand();
-    }
+    v.resize(16*1024*1024);
+    std::generate(v.begin(), v.end(), rand);
 
     const std::string o = to_base64(std::string_view{ v.data(), v.size() });
 
