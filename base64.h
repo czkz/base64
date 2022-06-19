@@ -6,10 +6,11 @@
 [[nodiscard]] inline std::string to_base64(std::string_view data);
 [[nodiscard]] inline std::string to_base64(const void* data, size_t size_bytes);
 
-inline size_t from_base64_inplace(void* data, size_t size_bytes);
-inline void from_base64_inplace(std::string& data);
-[[nodiscard]] inline std::string from_base64(const void* data, size_t size_bytes);
 [[nodiscard]] inline std::string from_base64(std::string_view data);
+[[nodiscard]] inline std::string from_base64(const void* data, size_t size_bytes);
+
+inline void from_base64_inplace(std::string& data);
+inline size_t from_base64_inplace(void* data, size_t size_bytes);
 
 static constexpr uint8_t base64_lut[256][7] = {
     "\xff\xff\xff\xff\xff\xff", "\xff\xff\xff\xff\xff\xff", "\xff\xff\xff\xff\xff\xff", "\xff\xff\xff\xff\xff\xff",
