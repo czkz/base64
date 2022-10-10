@@ -7,9 +7,9 @@ project('base64', 'cpp',
 ])
 
 tests = executable('tests',
-           'tests.cpp',
-           dependencies : [ dependency('doctest') ],
-           install : false)
+                   'tests.cpp',
+                   dependencies : [ dependency('doctest') ],
+                   install : false)
 test('base64', tests)
 
 executable('gen',
