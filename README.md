@@ -48,18 +48,23 @@ nor requires it to be validated beforehand - output data won't
 make much sense, but it won't impact the stability of the program.
 
 # Tests and benchmarks
-Required dependencies: `benchmark`, `doctest`.
+### 100% branch coverage.
 ```bash
-# Tests
+# Tests (requires doctest)
 meson setup build/
 meson compile -C build/ tests
 ./build/tests
 
-# Benchmarks
+# Tests with ASAN (requires doctest, libsanitizer)
+meson setup build/ -Db_sanitize=address,undefined
+meson compile -C build/ tests
+./build/tests
+
+# Benchmarks (requires benchmark)
 ./bench.sh
 
-# Code coverage
-meson setup build_cov/ -Db_coverage=true
+# Code coverage (requires doctest, lcov or gcov)
+meson setup build_cov/ --Dcpp_eh=none Db_coverage=true
 meson test -C build_cov/
 ninja -C build_cov/ coverage
 ```
